@@ -11,7 +11,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useSelector, useDispatch } from 'react-redux'
 import { addToCart } from '../features/cart/cartSlice'
-
+import { useNavigation } from '@react-navigation/native'
+import 'react-native-gesture-handler'
 const { width } = Dimensions.get('window')
 const CARD_WIDTH = (width - 30) / 2
 
@@ -21,7 +22,6 @@ const ProductCard = ({ item }: any) => {
 
   return (
     <View style={styles.card}>
-      
       {item.discount && (
         <View style={styles.badge}>
           <Text style={styles.badgeText}>{item.discount}% OFF</Text>
@@ -41,9 +41,7 @@ const ProductCard = ({ item }: any) => {
           <Text style={styles.price}>₹{item.price}</Text>
 
           {item.originalPrice && (
-            <Text style={styles.strike}>
-              ₹{item.originalPrice}
-            </Text>
+            <Text style={styles.strike}>₹{item.originalPrice}</Text>
           )}
         </View>
 
@@ -51,7 +49,7 @@ const ProductCard = ({ item }: any) => {
           style={styles.addBtn}
           onPress={() => dispatch(addToCart(item))}
         >
-          <Text style={styles.addText}>Add</Text>
+          <Text style={styles.addText}>Cart</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -59,31 +57,55 @@ const ProductCard = ({ item }: any) => {
 }
 
 export default function JTCChai() {
-
   const products = useSelector((state: any) => state.products.products)
-
-  // 👉 ADD THIS LINE RIGHT HERE
   const cart = useSelector((state: any) => state.cart.items)
 
-  console.log("CART:", cart)
+  const navigation = useNavigation<any>()
+
+  // total quantity 
+  const totalItems = cart.reduce(
+    (sum: number, item: any) => sum + item.quantity,
+    0
+  )
 
   return (
-    <SafeAreaView style={styles.screen}>
-      
+    <SafeAreaView 
+      edges = {['left', 'right', 'bottom']}
+      style={styles.screen}>
+      {/* Title */}
       <Text style={styles.title}>Our Collections</Text>
       <Text style={styles.description}>
         Discover premium masala chai, green tea, black tea & herbal blends
       </Text>
-      <Text>Items in cart: {cart.length}</Text>
 
+      <Text style={{ marginLeft: 12 }}>
+        Items in cart: {totalItems}
+      </Text>
+
+      {/* Product List */}
       <FlatList
         data={products}
         keyExtractor={(item) => item.id}
         numColumns={2}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.container}
+        contentContainerStyle={{ 
+          paddingBottom: 60,
+          paddingTop: 0
+         }}
         renderItem={({ item }) => <ProductCard item={item} />}
       />
+
+      {/*FOOTER CART BUTTON */}
+      <View style={styles.footer}>
+        <TouchableOpacity
+          style={styles.cartButton}
+          onPress={() => navigation.navigate('Cart')}
+        >
+          <Text style={styles.cartText}>
+            Go to Cart ({totalItems})
+          </Text>
+        </TouchableOpacity>
+      </View>
 
     </SafeAreaView>
   )
@@ -95,9 +117,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5'
   },
 
-  container: {
-    paddingHorizontal: 10,
-    paddingBottom: 10
+  logo: {
+    width: 120,
+    height: 50,
+    resizeMode: 'contain',
+    marginBottom: 5
+  },
+
+  nav: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 20
+  },
+
+  navItem: {
+    fontSize: 14,
+    fontWeight: '600'
   },
 
   card: {
@@ -118,7 +153,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginTop: 10,
+    marginTop: 0,
     marginLeft: 12
   },
 
@@ -183,6 +218,26 @@ const styles = StyleSheet.create({
   badgeText: {
     color: '#fff',
     fontSize: 10,
+    fontWeight: 'bold'
+  },
+
+  footer: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    right: 10
+  },
+
+  cartButton: {
+    backgroundColor: '#0C8F4F',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center'
+  },
+
+  cartText: {
+    color: '#fff',
+    fontSize: 16,
     fontWeight: 'bold'
   }
 })
