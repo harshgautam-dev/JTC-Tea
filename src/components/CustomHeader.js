@@ -12,21 +12,7 @@ export default function CustomHeader() {
         source={{ uri: 'https://jtcchai.com/JTC/logo_a.png'}} 
         style={styles.logo}
       />
-
-      {/* Nav Items */}
-      <View style={styles.nav}>
-        <TouchableOpacity>
-          <Text style={styles.link}>Home</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Text style={styles.link}>Products</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Text style={styles.link}>About</Text>
-        </TouchableOpacity>
-      </View>
+      <Text style={styles.title}> JTC - Sip the <Text style={styles.tradition}>tradition</Text></Text>
 
     </View>
     </SafeAreaView>
@@ -35,13 +21,23 @@ export default function CustomHeader() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F5E6D3', // light brown 🎯
+    backgroundColor: '#F5E6D3',
     paddingTop: 10,
-    paddingBottom: 4,
+    paddingBottom: 8,
+    paddingHorizontal: 12,
+    elevation: 4,
+    flexDirection: 'row',     
     alignItems: 'center',
-    elevation: 4
   },
-
+  title: {
+    marginLeft: 10,
+    fontSize: 25,
+    fontWeight: '600',
+    color: '#3E2C23'
+  },
+  tradition: {
+   color: '#694721'
+  },
   logo: {
     width: 50,
     height: 50,

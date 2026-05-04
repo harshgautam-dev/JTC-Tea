@@ -14,7 +14,7 @@ enableScreens()
 import JTCChai from './src/screens/JTCChai'
 import CartScreen from './src/screens/cartScreen'
 import CustomHeader from './src/components/CustomHeader'
-
+import HomeScreen from './src/screens/homeScreen'
 // Navigators
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -53,32 +53,46 @@ export default function App() {
 
         <Tab.Navigator
           screenOptions={({ route }) => ({
-            // correct fix
             header: () => <CustomHeader />,
-
-            tabBarIcon: ({ color, size }) => {
+          
+            tabBarIcon: ({ focused, size }) => {
               let iconName = ''
-
-              if (route.name === 'Products') {
-                iconName = 'home-outline'
-              } else if (route.name === 'Explore') {
-                iconName = 'search-outline'
-              } else if (route.name === 'Cart') {
-                iconName = 'cart-outline'
-              } else if (route.name === 'Profile') {
-                iconName = 'person-outline'
+          
+              if (route.name === 'Home') {
+                iconName = focused ? 'home' : 'home-outline'
+              } 
+              else if (route.name === 'Products') {
+                iconName = focused ? 'cafe' : 'cafe-outline'
+              } 
+              else if (route.name === 'Explore') {
+                iconName = focused ? 'search' : 'search-outline'
+              } 
+              else if (route.name === 'Cart') {
+                iconName = focused ? 'cart' : 'cart-outline'
+              } 
+              else if (route.name === 'Profile') {
+                iconName = focused ? 'person' : 'person-outline'
               }
-
-              return <Ionicons name={iconName} size={size} color={color} />
+          
+              return (
+                <Ionicons
+                  name={iconName}
+                  size={size}
+                  color={focused ? '#5C3A21' : 'gray'}
+                />
+              )
             },
 
-            tabBarActiveTintColor: '#0C8F4F',
-            tabBarInactiveTintColor: 'gray'
+            tabBarActiveTintColor: '#5C3A21',
+            tabBarInactiveTintColor: 'gray',
+          
+            tabBarLabelStyle: {
+              fontWeight: '600'
+            }
           })}
         >
-
+          <Tab.Screen name="Home" component={HomeScreen} />
           <Tab.Screen name="Products" component={JTCChai} />
-          <Tab.Screen name="Explore" component={Explore} />
           <Tab.Screen name="Cart" component={CartStack} />
           <Tab.Screen name="Profile" component={Profile} />
 
